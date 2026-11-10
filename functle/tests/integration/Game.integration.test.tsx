@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 import Game from "@/components/Game";
@@ -72,6 +72,41 @@ describe("Game Integration Tests", () => {
     render(<Game obstacles={[]} />);
 
     expect(getGraphPoints()).toEqual([]);
+  });
+
+  test("shows an empty history until a non-empty function is submitted", () => {
+    render(<Game obstacles={[]} />);
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Function" }), {
+      target: { value: "x^2" },
+    });
+    expect(screen.queryByRole("list", { name: "Submitted functions" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "Function history" })).not.toBeInTheDocument();
+
+    submitExpression("   ");
+
+    expect(screen.queryByRole("list", { name: "Submitted functions" })).not.toBeInTheDocument();
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+  });
+
+  test("keeps repeated and invalid submissions in history, newest first", () => {
+    render(<Game obstacles={[]} />);
+
+    submitExpression("x^2");
+    const validPoints = getGraphPoints();
+    submitExpression("x +");
+    expect(getGraphPoints()).toEqual(validPoints);
+    submitExpression("  x^2  ");
+
+    const history = screen.getByRole("list", { name: "Submitted functions" });
+    const entries = within(history).getAllByRole("listitem");
+    expect(entries).toHaveLength(3);
+    expect(entries[0]).toHaveTextContent("f(x) = x^2");
+    expect(entries[1]).toHaveTextContent("f(x) = x +");
+    expect(entries[1]).toHaveTextContent("Invalid expression");
+    expect(entries[2]).toHaveTextContent("f(x) = x^2");
+    expect(within(history).getAllByText("Invalid expression")).toHaveLength(1);
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
   test("submitting x^2 generates graph points", () => {
