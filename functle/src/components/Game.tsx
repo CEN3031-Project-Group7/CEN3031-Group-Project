@@ -15,8 +15,14 @@ interface GameProps {
 export default function Game({ obstacles }: GameProps) {
   const [points, setPoints] = useState<GraphPoint[]>([]);
   const [error, setError] = useState("");
+  const [history, setHistory] = useState<
+    { expression: string; valid: boolean }[]
+  >([]);
 
   function handleFunctionSubmit(expression: string) {
+    const trimmedExpression = expression.trim();
+    let valid = false;
+
     try {
       const newPoints = generateGraphPoints(expression);
 
@@ -26,8 +32,16 @@ export default function Game({ obstacles }: GameProps) {
 
       setPoints(newPoints);
       setError("");
+      valid = true;
     } catch {
       setError("Invalid or ungraphable mathematical expression");
+    }
+
+    if (trimmedExpression) {
+      setHistory((previous) => [
+        { expression: trimmedExpression, valid },
+        ...previous,
+      ]);
     }
   }
 
@@ -44,13 +58,28 @@ export default function Game({ obstacles }: GameProps) {
         />
       </section>
 
-      <div>
+      <div className="min-h-0 w-full max-w-sm space-y-6 justify-self-center lg:max-h-full lg:overflow-y-auto lg:p-1 lg:justify-self-end">
         <FunctionInput onSubmit={handleFunctionSubmit} />
 
         {error && (
           <p role="alert" className="mt-3 text-red-400">
             {error}
           </p>
+        )}
+
+        {history.length > 0 && (
+          <section aria-label="Function history" className="rounded border border-zinc-700 bg-zinc-900 p-4">
+            <ol className="max-h-48 space-y-2 overflow-y-auto" tabIndex={0} aria-label="Submitted functions">
+              {history.map((entry, index) => (
+                <li key={index} className="rounded border border-zinc-700 p-2">
+                  <p className="break-all font-mono text-sm">f(x) = {entry.expression}</p>
+                  {!entry.valid && (
+                    <span className="text-xs text-red-400">Invalid expression</span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </section>
         )}
       </div>
 
