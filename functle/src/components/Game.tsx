@@ -6,7 +6,9 @@ import FunctionInput from "@/components/FunctionInput";
 import GameGraphLoader from "@/components/GameGraphLoader";
 
 import type { GraphPoint, Obstacle } from "@/lib/Types";
+import { findCollisions } from "@/lib/collision";
 import { generateGraphPoints } from "@/lib/functionEval";
+import { PLOT_BOUNDS } from "@/lib/graphConstants";
 
 interface GameProps {
   obstacles: Obstacle[];
@@ -15,6 +17,8 @@ interface GameProps {
 export default function Game({ obstacles }: GameProps) {
   const [points, setPoints] = useState<GraphPoint[]>([]);
   const [error, setError] = useState("");
+
+  const collisions = findCollisions(points, obstacles, PLOT_BOUNDS);
 
   function handleFunctionSubmit(expression: string) {
     try {
@@ -50,6 +54,15 @@ export default function Game({ obstacles }: GameProps) {
         {error && (
           <p role="alert" className="mt-3 text-red-400">
             {error}
+          </p>
+        )}
+
+        {!error && collisions.length > 0 && (
+          <p role="status" className="mt-3 text-amber-300">
+            Collision: the function hits{" "}
+            {collisions.length === 1
+              ? "an obstacle"
+              : `${collisions.length} obstacles`}.
           </p>
         )}
       </div>

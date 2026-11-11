@@ -17,6 +17,14 @@ export const PLOT_LEFT = PADDING_LEFT;
 export const PLOT_RIGHT = GRAPH_WIDTH - PADDING_RIGHT;
 export const PLOT_TOP = PADDING_TOP;
 export const PLOT_BOTTOM = GRAPH_HEIGHT - PADDING_BOTTOM;
+
+/** Visible drawing area, in canvas pixels. */
+export const PLOT_BOUNDS = {
+  left: PLOT_LEFT,
+  right: PLOT_RIGHT,
+  top: PLOT_TOP,
+  bottom: PLOT_BOTTOM,
+};
 const PLOT_WIDTH = PLOT_RIGHT - PLOT_LEFT;
 const PLOT_HEIGHT = PLOT_BOTTOM - PLOT_TOP;
 

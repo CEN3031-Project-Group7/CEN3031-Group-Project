@@ -10,6 +10,7 @@ import type { GraphPoint, Obstacle } from "@/lib/Types";
 import {
   GRAPH_HEIGHT,
   GRAPH_WIDTH,
+  PLOT_BOUNDS,
   PLOT_BOTTOM,
   PLOT_LEFT,
   PLOT_RIGHT,
@@ -79,20 +80,13 @@ function drawLine(graphics: Graphics, points: GraphPoint[]) {
 
   if (points.length < 2) return;
 
-  const bounds = {
-    left: PLOT_LEFT,
-    right: PLOT_RIGHT,
-    top: PLOT_TOP,
-    bottom: PLOT_BOTTOM,
-  };
-
   let hasVisibleSegments = false;
 
   for (let i = 1; i < points.length; i++) {
     const segment = clipLine(
       points[i - 1],
       points[i],
-      bounds
+      PLOT_BOUNDS
     );
 
     if (!segment) continue;
