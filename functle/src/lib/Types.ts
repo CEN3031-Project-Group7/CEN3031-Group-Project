@@ -1,4 +1,4 @@
-import { toScreen } from "./graphTransform.ts";
+import { toScreen } from "./graphTransform";
 
 /** A function sample on the game graph, in canvas pixels; drawn as a line. */
 export type GraphPoint = {

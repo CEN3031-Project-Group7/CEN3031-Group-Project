@@ -1,6 +1,6 @@
-import { SCALE_X, SCALE_Y } from "./graphConstants.ts";
-import { toScreen } from "./graphTransform.ts";
-import type { Obstacle } from "./Types.ts";
+import { SCALE_X, SCALE_Y } from "./graphConstants";
+import { toScreen } from "./graphTransform";
+import type { Obstacle } from "./Types";
 
 /** One row from public.obstacle_circles (graph coordinates). */
 export type CircleRow = {

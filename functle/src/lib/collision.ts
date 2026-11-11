@@ -1,10 +1,10 @@
-import { clipLine, type ClipBounds } from "./clipLine.ts";
+import { clipLine, type ClipBounds } from "./clipLine";
 import type {
   CircleObstacle,
   GraphPoint,
   Obstacle,
   RectangleObstacle,
-} from "./Types.ts";
+} from "./Types";
 
 function segmentIntersectsCircle(
   start: GraphPoint,
